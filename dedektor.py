@@ -52,13 +52,6 @@ TUR_ISTEK_TAVANI = 700     # bir calistirmada azami istek
 ILK_TUR_DAKIKA = 15     # durum yoksa ne kadar geriye bakilir
 OI_SAKLA_SAAT = 8       # kendi OI gecmisimizi ne kadar tutalim
 
-# Isinma saatinin en erken baslayabilecegi an: ilk basarili Bitget turu
-# (2026-09-05 15:08Z). Oncesindeki turlar Binance'e vurup engellendigi icin
-# hicbir veri toplamadi; durum dosyasindaki eski "baslangic" degeri isinmayi
-# 50 dakika erken bitirirdi. Koda yaziyoruz ki botun her turu bunu yeniden
-# uygulasin, durum dosyasi uzerine yazilsa bile kaybolmasin.
-ISINMA_EN_ERKEN = 1788620880.0
-
 # Melih'in fiilen islem yaptigi ve Bitget'te bulunan semboller.
 # Binance'te olup Bitget'te olmayan ikisi (HEIUSDT, STARUSDT) disarida kaldi.
 EVREN = [
@@ -212,10 +205,6 @@ def tur():
     if d["baslangic"] is None:
         d["baslangic"] = simdi
         print("Isinma basladi. Gecerli sinyal icin %d saat gerekiyor." % ISINMA_SAAT)
-    if d["baslangic"] < ISINMA_EN_ERKEN:
-        print("Isinma saati duzeltildi: %s -> ilk Bitget turu"
-              % time.strftime("%H:%MZ", time.gmtime(d["baslangic"])))
-        d["baslangic"] = ISINMA_EN_ERKEN
     # Evrende olmayan eski semboller (Binance doneminden kalma) temizlensin
     for eski in [x for x in d["semboller"] if x not in EVREN]:
         del d["semboller"][eski]
